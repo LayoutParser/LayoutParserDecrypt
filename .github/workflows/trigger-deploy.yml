@@ -20,17 +20,46 @@ jobs:
       with:
         github-token: ${{ secrets.GH_PAT_TOKEN || secrets.GITHUB_TOKEN }}
         script: |
-          const { owner, repo } = context.repo;
+          const owner = 'Elsonc1';
+          const repo = 'LayoutParserApi';
           
-          // Disparar o workflow no repositório LayoutParserApi
-          await github.rest.actions.createWorkflowDispatch({
-            owner: 'Elsonc1',
-            repo: 'LayoutParserApi',
-            workflow_id: 'deploy.yml',
-            ref: 'main'
-          });
-          
-          console.log('✅ Workflow de deploy acionado no repositório LayoutParserApi');
+          try {
+            // Primeiro, tentar obter o workflow pelo caminho
+            let workflowId = '.github/workflows/deploy.yml';
+            
+            // Tentar disparar o workflow
+            await github.rest.actions.createWorkflowDispatch({
+              owner: owner,
+              repo: repo,
+              workflow_id: workflowId,
+              ref: 'main'
+            });
+            
+            console.log('✅ Workflow de deploy acionado no repositório LayoutParserApi');
+          } catch (error) {
+            // Se falhar, tentar buscar o workflow pelo nome
+            console.log('Tentando buscar workflow pelo nome...');
+            const workflows = await github.rest.actions.listWorkflowsForRepo({
+              owner: owner,
+              repo: repo
+            });
+            
+            const deployWorkflow = workflows.data.workflows.find(
+              w => w.name === 'Deploy to Production Server' || w.path.includes('deploy.yml')
+            );
+            
+            if (deployWorkflow) {
+              await github.rest.actions.createWorkflowDispatch({
+                owner: owner,
+                repo: repo,
+                workflow_id: deployWorkflow.id,
+                ref: 'main'
+              });
+              console.log('✅ Workflow de deploy acionado usando ID do workflow');
+            } else {
+              throw new Error('Workflow deploy.yml não encontrado no repositório LayoutParserApi');
+            }
+          }
           
     - name: Wait for deployment (optional)
       run: |
