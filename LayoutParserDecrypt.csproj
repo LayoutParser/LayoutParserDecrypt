@@ -34,9 +34,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="LayoutParserLib">
-      <HintPath>.\LayoutParserLib.dll</HintPath>
-    </Reference>
+    <ProjectReference Include="..\\LayoutParserLib\\LayoutParserLib.csproj" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
