@@ -21,7 +21,10 @@ namespace LayoutParserDecrypt
                 string inputFile = args[0];
                 string outputFile = args[1];
                 string correlationId = args.Length >= 3 && !string.IsNullOrWhiteSpace(args[2]) ? args[2] : Guid.NewGuid().ToString();
-                string logDir = args.Length >= 4 ? args[3] : (Environment.GetEnvironmentVariable("LAYOUTPARSER_LOG_DIR") ?? "");
+                string logDir = args.Length >= 4 && !string.IsNullOrWhiteSpace(args[3]) ? args[3] : Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs");
+
+                // Configurar logger do LayoutParserLib (embutido) sem depender de Environment variables
+                LayoutParserLib.RollingFileLogger.Configure(logDir, correlationId);
 
                 RollingFileLogger.Log(logDir, "layoutparserdecrypt.log", correlationId, "INF", $"START decrypt input='{inputFile}' output='{outputFile}'");
 

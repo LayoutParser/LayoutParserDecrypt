@@ -9,14 +9,22 @@ namespace LayoutParserLib
         private const long MaxBytes = 2049L * 1024L;
         private const int MaxFiles = 10;
 
+        private static string _logDir = "";
+        private static string _corr = "";
+
+        internal static void Configure(string logDir, string correlationId)
+        {
+            _logDir = logDir ?? "";
+            _corr = correlationId ?? "";
+        }
+
         internal static void Log(string level, string message, Exception ex = null)
         {
             try
             {
-                var logDir = Environment.GetEnvironmentVariable("LAYOUTPARSER_LOG_DIR") ?? "";
-                var corr = Environment.GetEnvironmentVariable("LAYOUTPARSER_CORRELATION_ID") ?? "";
-                if (string.IsNullOrWhiteSpace(corr))
-                    corr = "N/A";
+                var logDir = _logDir;
+                var corr = _corr;
+                if (string.IsNullOrWhiteSpace(corr)) corr = "N/A";
 
                 if (string.IsNullOrWhiteSpace(logDir))
                     logDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs");
