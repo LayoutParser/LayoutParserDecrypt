@@ -1,0 +1,44 @@
+using System;
+using System.IO;
+using System.Security.Cryptography;
+using System.Text;
+
+namespace LayoutParserLib
+{
+    public class CryptographySysMiddle
+    {
+        private static readonly SymmetricAlgorithm SymmetricAlgorithm = new RijndaelManaged();
+
+        public static string Decrypt(string messageToDecrypt)
+        {
+            try
+            {
+                RollingFileLogger.Log("INF", $"Decrypt start len={messageToDecrypt?.Length ?? 0}");
+                ICryptoTransform cryptoTransform = SymmetricAlgorithm.CreateDecryptor(
+                    Encoding.UTF8.GetBytes("dbc%$#h92785"),
+                    Encoding.UTF8.GetBytes("Ca#&UjO){Qwz*@FcsPs"));
+                byte[] inputBytes = Convert.FromBase64String(messageToDecrypt);
+                byte[] bytes = Operation(cryptoTransform, inputBytes);
+                var decrypted = Encoding.UTF8.GetString(bytes);
+                RollingFileLogger.Log("INF", $"Decrypt ok outLen={decrypted?.Length ?? 0}");
+                return decrypted;
+            }
+            catch (Exception ex)
+            {
+                RollingFileLogger.Log("ERR", "Decrypt error", ex);
+                throw;
+            }
+        }
+
+        private static byte[] Operation(ICryptoTransform cryptoTransform, byte[] inputBytes)
+        {
+            MemoryStream memoryStream = new MemoryStream();
+            CryptoStream cryptoStream = new CryptoStream(memoryStream, cryptoTransform, CryptoStreamMode.Write);
+            cryptoStream.Write(inputBytes, 0, inputBytes.Length);
+            cryptoStream.Close();
+            return memoryStream.ToArray();
+        }
+    }
+}
+
+

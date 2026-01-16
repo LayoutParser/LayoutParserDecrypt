@@ -34,6 +34,6 @@ jobs:
           path: |
             bin\Release\LayoutParserDecrypt.exe
             bin\Release\LayoutParserDecrypt.exe.config
-            bin\Release\LayoutParserLib.dll
+            # Lib está embutida no exe (fontes locais), não gera DLL separada
 
 

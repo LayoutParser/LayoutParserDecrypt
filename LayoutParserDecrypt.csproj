@@ -34,7 +34,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\\LayoutParserLib\\LayoutParserLib.csproj" />
+    <!--
+      IMPORTANT (CI):
+      Este projeto precisa compilar de forma independente no GitHub Actions.
+      O repositório do LayoutParserDecrypt não contém a solução LayoutParserLib como sibling.
+      Por isso, incluímos o código mínimo do LayoutParserLib (Crypto + logger) como arquivos fonte locais.
+    -->
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -47,6 +52,8 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="RollingFileLogger.cs" />
+    <Compile Include="LayoutParserLib\\RollingFileLogger.cs" />
+    <Compile Include="LayoutParserLib\\CryptographySysMiddle.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
