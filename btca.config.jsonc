@@ -1,0 +1,17 @@
+{
+  // Configuração do better-context (btca) para o LayoutParserDecrypt.
+  // Pré-requisito: `bun add -g btca opencode-ai` e `btca connect`.
+  // Para expor como MCP ao Claude Code: `btca mcp local` (escolha "Claude Code").
+  "$schema": "https://btca.dev/btca.schema.json",
+  "model": "claude-haiku-4-5",
+  "provider": "opencode",
+  "resources": [
+    {
+      "type": "local",
+      "name": "layoutparser-decrypt",
+      "path": ".",
+      "specialNotes": "CLI net4.8.1 que descriptografa mappers/layouts da Sysmiddle (Rijndael/AES) para o Redis, via a LayoutParserApi."
+    }
+  ],
+  "dataDirectory": ".btca"
+}

@@ -1,0 +1,16 @@
+{
+  "//": "MCP server do ecossistema LayoutParser. Vive no repo LayoutParserApi (mcp/LayoutParserMcp) — cliente stdio fino sobre a API HTTP. A API e a fonte da verdade.",
+  "//prereq": "1) Compile a DLL: cd ../LayoutParserApi/mcp/LayoutParserMcp && dotnet build -c Release  2) Suba a API em LAYOUTPARSER_API_URL (default http://localhost:5000).",
+  "//approve": "O Claude Code vai pedir aprovacao deste server antes de inicia-lo.",
+  "mcpServers": {
+    "layoutparser": {
+      "command": "dotnet",
+      "args": [
+        "../LayoutParserApi/mcp/LayoutParserMcp/bin/Release/net10.0/LayoutParserMcp.dll"
+      ],
+      "env": {
+        "LAYOUTPARSER_API_URL": "http://localhost:5000"
+      }
+    }
+  }
+}
