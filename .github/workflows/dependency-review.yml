@@ -11,7 +11,7 @@ name: Dependency review
 
 on:
   pull_request:
-    branches: [ "master", "main" ]
+    branches: [ "master", "main", "develop" ]
 
 concurrency:
   group: dependency-review-${{ github.workflow }}-${{ github.ref }}

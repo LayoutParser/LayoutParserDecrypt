@@ -6,14 +6,15 @@ name: Gitleaks (secret scan)
 # (não a Action gitleaks/gitleaks-action@v2, que exige licença paga para repositórios de
 # ORGANIZAÇÃO desde 2025) — mesma decisão já tomada na API, sem custo.
 #
-# Roda em TODO PR contra master (único fluxo deste repo: feat/** -> master direto, sem
-# develop — confirmado via `git branch -a`, este repo não tem branch develop).
+# Roda em TODO PR contra master OU develop (fluxo real: feat/** -> develop -> master,
+# mesmo padrão já usado no LayoutParserApi — develop foi criada em 2026-09-25).
 
 on:
   pull_request:
     branches:
       - master
       - main
+      - develop
 
 concurrency:
   group: gitleaks-${{ github.event.pull_request.number }}
