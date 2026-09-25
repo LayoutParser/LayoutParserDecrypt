@@ -13,27 +13,34 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup MSBuild
-        uses: microsoft/setup-msbuild@v2
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
 
-      - name: Restore (NuGet)
+      # Projeto principal continua net48 (ver comentário em LayoutParserDecrypt.csproj: a
+      # chave/IV do RijndaelManaged não são tamanhos válidos de AES, e o RijndaelManaged de
+      # .NET Core+/.NET moderno é só um shim sobre AES) — SDK-style, então `dotnet build`
+      # resolve normalmente mesmo sendo net48.
+      - name: Restore
         shell: pwsh
-        run: |
-          nuget help > $null
-          nuget restore .\LayoutParserDecrypt.sln
+        run: dotnet restore .\LayoutParserDecrypt.sln
 
       - name: Build (Release)
         shell: pwsh
-        run: |
-          msbuild .\LayoutParserDecrypt.sln /m /p:Configuration=Release /p:Platform="Any CPU"
+        run: dotnet build .\LayoutParserDecrypt.sln -c Release --no-restore
+
+      - name: Test
+        shell: pwsh
+        run: dotnet test .\LayoutParserDecrypt.sln -c Release --no-build
 
       - name: Upload artifact (exe)
         uses: actions/upload-artifact@v4
         with:
           name: LayoutParserDecrypt
           path: |
-            bin\Release\LayoutParserDecrypt.exe
-            bin\Release\LayoutParserDecrypt.exe.config
+            bin\Release\net48\LayoutParserDecrypt.exe
+            bin\Release\net48\LayoutParserDecrypt.exe.config
             # Lib está embutida no exe (fontes locais), não gera DLL separada
 
 
